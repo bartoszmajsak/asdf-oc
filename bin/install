@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
+[ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
+[ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
+
+install_oc() {
+  local install_type=$1
+  local version=$2
+  local install_path=$3
+  local bin_install_path="$install_path/bin"
+  local download_url="$(get_download_url $version)"
+
+  mkdir -p "${bin_install_path}"
+
+  local bin_path="${bin_install_path}/oc"
+
+  echo "Downloading OpenShift Client v${version} from ${download_url} to ${bin_install_path}"  
+  install_executable $download_url $bin_path
+
+}
+
+install_executable() {
+  local download_url=$1
+  local bin_path=$2
+  wget "$download_url" -O "${bin_path}"
+  chmod +x "${bin_path}"
+}
+
+get_arch() {
+  local platform=""
+  [ "Linux" = "$(uname)" ] && platform="linux" || platform="darwin"
+  echo "${platform}"
+}
+
+get_hash() {
+  tag="$1"
+  tags_path=https://api.github.com/repos/openshift/origin/git/refs/tags/${tag}
+  cmd="curl -s"
+  if [ -n "$OAUTH_TOKEN" ]; then
+    cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
+  fi
+
+  hashes=$(eval $cmd $tags_path | sed -n -e '/object/,$p' | grep -Po '"url": *\K"[^"]*"' | sed 's/\"//;s/\"//')
+  hash=$(eval $cmd $hashes | sed -n -e '/object/,$p' | grep -Po '"sha": *\K"[^"]*"' | sed 's/\"//;s/\"//')
+  echo ${hash:0:7}
+}
+
+get_download_url() {
+  local version="$1"
+  local filename=""
+  hash=$(get_hash "$version")
+  platform=$(get_arch)
+  filename="openshift-origin-client-tools-${version}-${hash}-${platform}-64bit.tar.gz"
+  echo "https://github.com/openshift/origin/releases/download/${version}/${filename}"
+}
+
+install_oc $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH

@@ -1,0 +1,16 @@
+= asdf-oc
+
+image::https://travis-ci.org/bartoszmajsak/asdf-oc.svg?branch=master)[link="https://travis-ci.org/bartoszmajsak/asdf-oc"]
+
+https://github.com/openshift/origint[Openshift] plugin for https://github.com/asdf-vm/asdf[asdf] version manager.
+
+== Install
+
+[source,bash]
+----
+asdf plugin-add oc https://github.com/bartoszmajsak/asdf-oc.git
+----
+
+== Use
+
+Check out the https://github.com/asdf-vm/asdf/README.md[asdf README] for instructions on how to install and manage versions of variety of tools it supports.
