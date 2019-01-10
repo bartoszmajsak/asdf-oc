@@ -16,18 +16,20 @@ install_oc() {
 
   mkdir -p "${bin_install_path}"
 
-  local bin_path="${bin_install_path}/oc"
+  local binary="oc.tar.gz"
 
-  echo "Downloading OpenShift Client v${version} from ${download_url} to ${bin_install_path}"  
-  install_executable $download_url $bin_path
+  echo "Downloading OpenShift Client ${version} from ${download_url} to ${bin_install_path}"  
+  install_executable $download_url $bin_install_path $binary
 
 }
 
 install_executable() {
   local download_url=$1
-  local bin_path=$2
-  wget "$download_url" -O "${bin_path}"
-  chmod +x "${bin_path}"
+  local path=$2
+  local binary=$3
+  wget "$download_url" -O "${path}/${binary}"
+  cd ${path} && tar xzfv ${path}/${binary} **/oc --strip 1 && cd -
+  rm -rf ${bin_install_path}/${binary}
 }
 
 get_arch() {
