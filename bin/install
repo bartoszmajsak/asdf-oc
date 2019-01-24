@@ -75,7 +75,6 @@ get_download_url() {
   local filename=""
   hash=$(get_hash "$version")
   platform=$(get_arch)
-  echo $platform
   filename="openshift-origin-client-tools-${version}-${hash}-${platform}-64bit.tar.gz"
   echo "https://github.com/openshift/origin/releases/download/${version}/${filename}"
 }
