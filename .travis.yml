@@ -1,5 +1,5 @@
 language: c
-script: asdf plugin-test oc https://github.com/bartoszmajsak/asdf-oc.git
+script: asdf plugin-test oc https://github.com/${TRAVIS_PULL_REQUEST_SLUG:-"bartoszmajsak/asdf-oc"}.git@${TRAVIS_PULL_REQUEST_BRANCH:-"master"}
 before_script:
   - git clone https://github.com/asdf-vm/asdf.git
   - . asdf/asdf.sh
