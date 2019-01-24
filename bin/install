@@ -48,7 +48,7 @@ get_arch() {
       ;;
 
     *)
-      echo 'other OS' 
+      echo 'other OS'
       ;;
   esac
 }
