@@ -33,9 +33,24 @@ install_executable() {
 }
 
 get_arch() {
-  local platform=""
-  [ "Linux" = "$(uname)" ] && platform="linux" || platform="darwin"
-  echo "${platform}"
+  case "$(uname -s)" in
+
+    Darwin)
+      echo 'mac'
+      ;;
+
+    Linux)
+      echo 'linux'
+      ;;
+
+    CYGWIN*|MINGW32*|MSYS*)
+      echo 'windows'
+      ;;
+
+    *)
+      echo 'other OS' 
+      ;;
+  esac
 }
 
 get_hash() {
