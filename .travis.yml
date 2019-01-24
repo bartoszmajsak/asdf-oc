@@ -6,3 +6,5 @@ before_script:
 os:
   - linux
   - osx
+  - windows
+  

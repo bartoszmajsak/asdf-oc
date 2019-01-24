@@ -33,9 +33,24 @@ install_executable() {
 }
 
 get_arch() {
-  local platform=""
-  [ "Linux" = "$(uname)" ] && platform="linux" || platform="darwin"
-  echo "${platform}"
+  case "$(uname -s)" in
+
+    Darwin)
+      echo 'mac.zip'
+      ;;
+
+    Linux)
+      echo 'linux-64bit.tar.gz'
+      ;;
+
+    CYGWIN*|MINGW32*|MSYS*)
+      echo 'windows.zip'
+      ;;
+
+    *)
+      echo 'other OS'
+      ;;
+  esac
 }
 
 get_hash() {
@@ -60,7 +75,7 @@ get_download_url() {
   local filename=""
   hash=$(get_hash "$version")
   platform=$(get_arch)
-  filename="openshift-origin-client-tools-${version}-${hash}-${platform}-64bit.tar.gz"
+  filename="openshift-origin-client-tools-${version}-${hash}-${platform}"
   echo "https://github.com/openshift/origin/releases/download/${version}/${filename}"
 }
 
