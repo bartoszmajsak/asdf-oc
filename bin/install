@@ -72,11 +72,43 @@ get_hash() {
 
 get_download_url() {
   local version="$1"
-  local filename=""
-  hash=$(get_hash "$version")
-  platform=$(get_arch)
-  filename="openshift-origin-client-tools-${version}-${hash}-${platform}"
-  echo "https://github.com/openshift/origin/releases/download/${version}/${filename}"
+  local url=""
+
+  # If OCP v4.x there's different location to retrieve binary from
+  if [[ $version == v4* ]]; then
+    version=${version#"v"}
+    local platform=$(get_arch_4x "${version}")
+    url="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${version}/openshift-client-${platform}"
+  else
+    local hash=$(get_hash "$version")
+    local platform=$(get_arch)
+    local filename="openshift-origin-client-tools-${version}-${hash}-${platform}"
+    url="https://github.com/openshift/origin/releases/download/${version}/${filename}"
+  fi
+
+  echo "${url}"
+}
+
+get_arch_4x() {
+  local version="$1"
+  case "$(uname -s)" in
+
+    Darwin)
+      echo "mac-${version}.tar.gz"
+      ;;
+
+    Linux)
+      echo "linux-${version}.tar.gz"
+      ;;
+
+    CYGWIN*|MINGW32*|MSYS*)
+      echo "windows-${version}.zip"
+      ;;
+
+    *)
+      echo 'other OS'
+      ;;
+  esac
 }
 
 install $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH

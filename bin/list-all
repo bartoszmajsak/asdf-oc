@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-releases_path=https://api.github.com/repos/openshift/origin/releases
+releases_path_gh=https://api.github.com/repos/openshift/origin/releases
 cmd="curl -s"
 
 if [ -n "$GITHUB_API_TOKEN" ]; then
@@ -9,7 +9,7 @@ elif [ -n "$OAUTH_TOKEN" ]; then
   cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
 fi
 
-cmd="$cmd $releases_path"
+cmd="$cmd $releases_path_gh"
 
 # From https://github.com/rbenv/ruby-build/pull/631/files#diff-fdcfb8a18714b33b07529b7d02b54f1dR942
 function sort_versions() {
@@ -19,4 +19,7 @@ function sort_versions() {
 
 # Fetch all tag names, and get only second column. Then remove all unnecesary characters.
 versions=$(eval $cmd | grep -oE "tag_name\":\s?\".*\"," | sed 's/tag_name\": *\"//;s/\",//' | sort_versions)
-echo $versions
+versions+=' '
+versions+=$(curl -s https://mirror.openshift.com/pub/openshift-v4/clients/ocp/ | grep '<td><a href' | sed -n 's/.*href="\([^"]*\).*/\1/p' | tail -n +2 | sed '/latest/d' | sed 's:/$::' | awk '{ print "v" $0; }' | sort_versions)
+
+echo ${versions}
