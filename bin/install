@@ -28,7 +28,7 @@ install_executable() {
   local path=$2
   local binary=$3
   wget "$download_url" -O "${path}/${binary}"
-  cd ${path} && tar xzfv ${path}/${binary} **/oc --strip 1 && cd -
+  cd ${path} && tar xzfv ${path}/${binary} oc && cd -
   rm -rf ${bin_install_path}/${binary}
 }
 
