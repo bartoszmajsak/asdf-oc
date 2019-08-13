@@ -1,10 +1,15 @@
 language: c
-script: asdf plugin-test oc https://github.com/bartoszmajsak/asdf-oc.git
-before_script:
-  - git clone https://github.com/asdf-vm/asdf.git
-  - . asdf/asdf.sh
+
 os:
   - linux
   - osx
   - windows
-  
+
+before_script:
+  - git clone https://github.com/asdf-vm/asdf.git
+  - . asdf/asdf.sh
+
+script:
+  - asdf plugin-add oc ./
+  - asdf list-all oc
+  - asdf plugin-test oc ./ 'oc version' || exit 1  
