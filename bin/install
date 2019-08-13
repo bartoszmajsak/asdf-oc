@@ -8,19 +8,17 @@ ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version  }
 [ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
 
 install() {
-  local install_type=$1
   local version=$2
   local install_path=$3
   local bin_install_path="$install_path/bin"
-  local download_url="$(get_download_url $version)"
+  local download_url=$(get_download_url "${version}")
 
   mkdir -p "${bin_install_path}"
 
   local binary="oc.tar.gz"
 
-  echo "Downloading OpenShift Client ${version} from ${download_url} to ${bin_install_path}"  
-  install_executable $download_url $bin_install_path $binary
-
+  echo "Downloading OpenShift Client ${version} from ${download_url} to ${bin_install_path}"
+  install_executable "${download_url}" "${bin_install_path}" "${binary}"
 }
 
 install_executable() {
