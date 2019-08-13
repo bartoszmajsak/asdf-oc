@@ -81,6 +81,7 @@ get_arch() {
   local version="$1"
 
   if [[ $version == v4* ]]; then
+    version=${version#"v"}
     case "$(uname -s)" in
       Darwin)
         echo "mac-${version}.tar.gz"
