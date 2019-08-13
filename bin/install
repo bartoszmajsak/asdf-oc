@@ -15,7 +15,7 @@ install() {
 
   mkdir -p "${bin_install_path}"
 
-  local binary="oc-$(getarch ${version})"
+  local binary="oc-$(get_arch ${version})"
 
   echo "Downloading OpenShift Client ${version} from ${download_url} to ${bin_install_path}"
   install_executable "${download_url}" "${bin_install_path}" "${binary}"
