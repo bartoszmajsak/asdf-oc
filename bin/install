@@ -28,7 +28,7 @@ install_executable() {
   wget "$download_url" -O "${path}/${binary}"
   case "$(uname -s)" in
       Darwin|Linux)
-        cd ${path} && tar xzfv ${path}/${binary} oc && cd -
+        cd ${path} && tar xzfv ${path}/${binary} --wildcards --no-anchored '**/oc' --strip 1 && cd -
         ;;
 
       CYGWIN*|MINGW32*|MSYS*)
