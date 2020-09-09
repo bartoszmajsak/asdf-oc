@@ -18,17 +18,24 @@ install() {
   local binary="oc-$(get_arch ${version})"
 
   echo "Downloading OpenShift Client ${version} from ${download_url} to ${bin_install_path}"
-  install_executable "${download_url}" "${bin_install_path}" "${binary}"
+  install_executable "${download_url}" "${bin_install_path}" "${binary}" "${version}"
 }
 
 install_executable() {
   local download_url=$1
   local path=$2
   local binary=$3
+  local version=$4
   wget "$download_url" -O "${path}/${binary}"
   case "$(uname -s)" in
       Darwin|Linux)
-        cd ${path} && tar xzfv ${path}/${binary} oc && cd -
+        if [[ $version == v4* ]]; then
+          cd ${path} && tar xzfv ${path}/${binary} oc && cd -
+  	elif [[ $version == v3* ]]; then
+	  cd ${path} && tar xzfv ${path}/${binary} --wildcards --no-anchored '**/oc' --strip 1 && cd -
+	else
+	  echo "Unknown OC major version"
+	fi
         ;;
 
       CYGWIN*|MINGW32*|MSYS*)
