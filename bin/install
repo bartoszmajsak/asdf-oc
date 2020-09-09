@@ -31,11 +31,11 @@ install_executable() {
       Darwin|Linux)
         if [[ $version == v4* ]]; then
           cd ${path} && tar xzfv ${path}/${binary} oc && cd -
-  	elif [[ $version == v3* ]]; then
-	  cd ${path} && tar xzfv ${path}/${binary} --wildcards --no-anchored '**/oc' --strip 1 && cd -
-	else
-	  echo "Unknown OC major version"
-	fi
+        elif [[ $version == v3* ]]; then
+          cd ${path} && tar xzfv ${path}/${binary} --wildcards --no-anchored '**/oc' --strip 1 && cd -
+        else
+          echo "Unknown OC major version"
+        fi
         ;;
 
       CYGWIN*|MINGW32*|MSYS*)
