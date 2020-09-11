@@ -20,6 +20,8 @@ function sort_versions() {
 # Fetch all tag names, and get only second column. Then remove all unnecesary characters.
 versions=$(eval "${cmd}" | grep -oE "tag_name\":\s?\".*\"," | sed 's/tag_name\": *\"//;s/\",//' | sort_versions)
 versions+=' '
-versions+=$(curl -s https://mirror.openshift.com/pub/openshift-v4/clients/ocp/ | grep '<td><a href' | sed -n 's/.*href="\([^"]*\).*/\1/p' | tail -n +2 | sed -n '/^[0-9]/p' | sed 's:/$::' | awk '{ print "v" $0; }' | sort_versions)
+versions+=$(curl -s https://mirror.openshift.com/pub/openshift-v4/clients/ocp/ | grep '<td><a href' | sed -n 's/.*href="\([^"]*\).*/\1/p' | tail -n +2 \
+  | sed -n '/^[0-9]/p' | sed 's:/$::' | awk '{ print "v" $0; }' \
+  | grep -vE "(^Available versions:|-src|-dev|-latest|-stm|[-\\.]rc|-alpha|-beta|[-\\.]pre|-next|(a|b|c)[0-9]+|snapshot|master)" | sort_versions)
 
 echo ${versions}
